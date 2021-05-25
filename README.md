@@ -2,10 +2,14 @@
 
 [Documentation](https://docs.rs/tar)
 
-A tar archive reading/writing library for Rustm, adapted for Rust SGX, for the enclave part.
+A tar archive reading/writing library for Rust, adapted for Rust SGX (version 1.1.3), for the enclave part. 
+The whole library has been ported, but some functions had to be removed due to how SGX works 
+(anything related to filesystem has been disabled).
 
 [Original github repo](https://github.com/alexcrichton/tar-rs)
+
 [Rust SGX SDK](https://github.com/apache/incubator-teaclave-sgx-sdk)
+
 
 ```toml
 # Cargo.toml
@@ -73,7 +77,8 @@ pub extern "C" fn read_tar(tar_ptr: *const u8, tar_len: usize) -> sgx_status_t
     let mut tar_slice = unsafe { slice::from_raw_parts(tar_ptr, tar_len) };
     let mut a = Archive::new(tar_slice);
 
-    for entry in a.entries() {
+    for entry in a.entries() 
+    {
             let mut entry = entry?;
             let path = entry.path()?.to_path_buf();
     }
