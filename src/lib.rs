@@ -21,15 +21,15 @@
 #![deny(missing_docs)]
 #![cfg_attr(test, deny(warnings))]
 
-#![cfg_attr(not(target_env = "sgx"), no_std)]
+#![cfg_attr(all(not(target_env = "sgx"), feature = "mesalock_sgx"), no_std)]
 #![cfg_attr(target_env = "sgx", feature(rustc_private))]
 
-#[cfg(target_env = "sgx")]
-extern crate core;
-
-#[cfg(not(target_env = "sgx"))]
+#[cfg(all(not(target_env = "sgx"), feature = "mesalock_sgx"))]
 #[macro_use]
 pub extern crate sgx_tstd as std;
+
+#[cfg(any(target_env = "sgx", feature = "mesalock_sgx"))]
+#[macro_use]
 pub extern crate sgx_libc as libc;
 
 use std::io::{Error, ErrorKind};
