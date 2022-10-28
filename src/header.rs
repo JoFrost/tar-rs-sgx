@@ -1,5 +1,5 @@
-#[cfg(any(unix, target_env = "sgx"))]
-use std::os::unix::prelude::*;
+//#[cfg(any(unix, target_env = "sgx"))]
+//use std::os::fortanix_sgx::prelude::*;
 #[cfg(windows)]
 use std::os::windows::prelude::*;
 
@@ -15,6 +15,8 @@ use std::str;
 
 use crate::other;
 use crate::EntryType;
+
+use std::os::fortanix_sgx::ffi::OsStringExt;
 
 /// Representation of the header of an entry in an archive
 #[repr(C)]
@@ -1406,6 +1408,7 @@ fn ends_with_slash(p: &Path) -> bool {
 
 #[cfg(any(unix, target_env = "sgx"))]
 fn ends_with_slash(p: &Path) -> bool {
+    use std::os::fortanix_sgx::ffi::{OsStrExt};
     p.as_os_str().as_bytes().ends_with(&[b'/'])
 }
 
@@ -1434,6 +1437,7 @@ pub fn path2bytes(p: &Path) -> io::Result<Cow<[u8]>> {
 #[cfg(any(unix, target_env = "sgx"))]
 /// On unix this will never fail
 pub fn path2bytes(p: &Path) -> io::Result<Cow<[u8]>> {
+    use std::os::fortanix_sgx::ffi::{OsStrExt};
     Ok(p.as_os_str().as_bytes()).map(Cow::Borrowed)
 }
 
@@ -1464,6 +1468,7 @@ pub fn bytes2path(bytes: Cow<[u8]>) -> io::Result<Cow<Path>> {
 /// On unix this operation can never fail.
 pub fn bytes2path(bytes: Cow<[u8]>) -> io::Result<Cow<Path>> {
     use std::ffi::{OsStr, OsString};
+    use std::os::fortanix_sgx::ffi::{OsStrExt};
 
     Ok(match bytes {
         Cow::Borrowed(bytes) => Cow::Borrowed(Path::new(OsStr::from_bytes(bytes))),
