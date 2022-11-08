@@ -23,8 +23,8 @@
 
 #![cfg_attr(all(not(target_env = "sgx"), feature = "mesalock_sgx"), no_std)]
 #![cfg_attr(target_env = "sgx", feature(rustc_private))]
+#![cfg_attr(target_env = "sgx", feature(sgx_platform))]
 
-#![feature(sgx_platform)]
 /*
 #[cfg(all(not(target_env = "sgx"), feature = "mesalock_sgx"))]
 #[macro_use]
